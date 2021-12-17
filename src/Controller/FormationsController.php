@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\FormationRepository;
+use App\Repository\NiveauRepository;
 
 /**
  * Description of FormationsController
@@ -24,10 +25,18 @@ class FormationsController extends AbstractController {
 
     /**
      * 
-     * @param FormationRepository $repository
+     * @param NiveauRepository $repositoryNiveau
      */
-    function __construct(FormationRepository $repository) {
+    private $repositoryNiveau;
+    
+    /**
+     * 
+     * @param FormationRepository $repository
+     * @param NiveauRepository $repositoryNiveau
+     */
+    function __construct(FormationRepository $repository, NiveauRepository $repositoryNiveau) {
         $this->repository = $repository;
+        $this->repositoryNiveau = $repositoryNiveau;
     }
 
     /**
@@ -35,9 +44,11 @@ class FormationsController extends AbstractController {
      * @return Response
      */
     public function index(): Response{
+        $niveaux = $this->repositoryNiveau->findAll();
         $formations = $this->repository->findAll();
         return $this->render(self::PAGEFORMATIONS, [
-            'formations' => $formations
+            'formations' => $formations,
+            'niveaux' => $niveaux,
         ]);
     }
     
@@ -48,11 +59,14 @@ class FormationsController extends AbstractController {
      * @return Response
      */
     public function sort($champ, $ordre): Response{
+        $niveaux = $this->repositoryNiveau->findAll();
         $formations = $this->repository->findAllOrderBy($champ, $ordre);
         return $this->render(self::PAGEFORMATIONS, [
-           'formations' => $formations
+           'formations' => $formations,
+           'niveaux' => $niveaux
         ]);
-    }   
+    }  
+    
         
     /**
      * @Route("/formations/recherche/{champ}", name="formations.findallcontain")
@@ -62,14 +76,23 @@ class FormationsController extends AbstractController {
      */
     public function findAllContain($champ, Request $request): Response{
         if($this->isCsrfTokenValid('filtre_'.$champ, $request->get('_token'))){
+            $niveaux = $this->repositoryNiveau->findAll();
             $valeur = $request->get("recherche");
-            $formations = $this->repository->findByContainValue($champ, $valeur);
+            if ($champ == "niveau") {
+                $formations = $this->repository->findByLevel("libelle", $valeur);
+            }
+            else {
+                $formations = $this->repository->findByContainValue($champ, $valeur);
+            }
             return $this->render(self::PAGEFORMATIONS, [
-                'formations' => $formations
+                'formations' => $formations,
+                'niveaux' => $niveaux,
+                'niveauselection' => $valeur
             ]);
         }
         return $this->redirectToRoute("formations");
-    }  
+    }     
+    
     
     /**
      * @Route("/formations/formation/{id}", name="formations.showone")
@@ -77,9 +100,11 @@ class FormationsController extends AbstractController {
      * @return Response
      */
     public function showOne($id): Response{
+        $niveaux = $this->repositoryNiveau->findAll();
         $formation = $this->repository->find($id);
         return $this->render("pages/formation.html.twig", [
-            'formation' => $formation
+            'formation' => $formation,
+            'niveaux' => $niveaux
         ]);        
     }    
 }

@@ -33,7 +33,7 @@ class FormationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Enregistrements dont un champ contientune valeur
+     * Enregistrements dont un champ contient une valeur
      * ou tous les enregistrements si la valeur est vide
      * @param type $champ
      * @param type $valeur
@@ -55,6 +55,33 @@ class FormationRepository extends ServiceEntityRepository
                     ->getResult();            
         }
     }
+    
+    
+    /**
+     * Enregistrements dont le niveau correspond à une valeur
+     * ou tous les enregistrements si la valeur est vide
+     * @param type $champ
+     * @param type $valeur
+     * @return Formation[]
+     */
+    public function findByLevel($champ, $valeur): array{
+        if($valeur==''){
+            return $this->createQueryBuilder('f')
+                    ->orderBy('f.niveau', 'ASC')
+                    ->getQuery()
+                    ->getResult();
+        }else{
+            return $this->createQueryBuilder('f')
+                    ->innerJoin('f.niveau', 'n')
+                    ->where('n.'.$champ.' LIKE :valeur')
+                    ->setParameter('valeur', $valeur)
+                    ->orderBy('f.publishedAt', 'DESC')
+                    ->setParameter('valeur', '%'.$valeur.'%')
+                    ->getQuery()
+                    ->getResult();            
+        }
+    }
+    
         
     /**
      * Retourne les n formations les plus récentes
