@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace App\Controller\admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,38 +9,41 @@ use App\Repository\FormationRepository;
 use App\Repository\NiveauRepository;
 
 /**
- * Description of FormationsController
+ * Description of AdminFormationsController
  *
- * @author emds
+ * @author aurink
  */
-class FormationsController extends AbstractController {
+class AdminFormationsController extends AbstractController {
     
-    private const PAGEFORMATIONS = "pages/formations.html.twig";
-
+    private const PAGEFORMATIONS = "admin/admin.formations.html.twig";
+    
+    
     /**
      *
      * @var FormationRepository
      */
     private $repository;
-
-    /**
+    
+    
+     /**
      * 
      * @param NiveauRepository $repositoryNiveau
      */
     private $repositoryNiveau;
     
+    
     /**
      * 
      * @param FormationRepository $repository
-     * @param NiveauRepository $repositoryNiveau
      */
-    function __construct(FormationRepository $repository, NiveauRepository $repositoryNiveau) {
+    public function __construct(FormationRepository $repository, NiveauRepository $repositoryNiveau) {
         $this->repository = $repository;
         $this->repositoryNiveau = $repositoryNiveau;
-    }
-
+    }    
+    
+    
     /**
-     * @Route("/formations", name="formations")
+     * @Route("/admin", name="admin.formations")
      * @return Response
      */
     public function index(): Response{
@@ -48,12 +51,13 @@ class FormationsController extends AbstractController {
         $formations = $this->repository->findAll();
         return $this->render(self::PAGEFORMATIONS, [
             'formations' => $formations,
-            'niveaux' => $niveaux,
+            'niveaux' => $niveaux
         ]);
     }
     
+    
     /**
-     * @Route("/formations/tri/{champ}/{ordre}", name="formations.sort")
+     * @Route("admin/formations/tri/{champ}/{ordre}", name="admin.formations.sort")
      * @param type $champ
      * @param type $ordre
      * @return Response
@@ -69,7 +73,7 @@ class FormationsController extends AbstractController {
     
         
     /**
-     * @Route("/formations/recherche/{champ}", name="formations.findallcontain")
+     * @Route("admin/formations/recherche/{champ}", name="admin.formations.findallcontain")
      * @param type $champ
      * @param Request $request
      * @return Response
@@ -92,19 +96,4 @@ class FormationsController extends AbstractController {
         }
         return $this->redirectToRoute("formations");
     }
-    
-    
-    /**
-     * @Route("/formations/formation/{id}", name="formations.showone")
-     * @param type $id
-     * @return Response
-     */
-    public function showOne($id): Response{
-        $niveaux = $this->repositoryNiveau->findAll();
-        $formation = $this->repository->find($id);
-        return $this->render("pages/formation.html.twig", [
-            'formation' => $formation,
-            'niveaux' => $niveaux
-        ]);        
-    }    
 }

@@ -52,13 +52,13 @@ class FormationRepository extends ServiceEntityRepository
                     ->orderBy('f.publishedAt', 'DESC')
                     ->setParameter('valeur', '%'.$valeur.'%')
                     ->getQuery()
-                    ->getResult();            
+                    ->getResult();
         }
     }
     
     
     /**
-     * Enregistrements dont le niveau correspond à une valeur
+     * Enregistrements dont le niveau correspond à la valeur
      * ou tous les enregistrements si la valeur est vide
      * @param type $champ
      * @param type $valeur

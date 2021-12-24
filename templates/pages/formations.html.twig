@@ -15,33 +15,29 @@
                         <button type="submit" class="btn btn-info mb-2 btn-sm">filtrer</button>
                     </form>
                 </th>
-                <th class="text-center align-top" scope="col">
-                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
-                 </th>
-                 <th class="text-left align-top" scope="col">
+                <th class="text-left align-top" scope="col">
                     niveau
-                    <a href="{{ path('formations.sort', {champ:'niveau', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
-                    <a href="{{ path('formations.sort', {champ:'niveau', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
                     <form class="form-inline mt-1" method="POST" action="{{ path('formations.findallcontain', {champ:'niveau'}) }}">
-                        <div class="form-group mr-1 mb-2">
+                        <div class="form-group mr-1 mt-2">
                             <label for="recherche"></label>
-                            <select type="text" name="recherche">
-                                <option></option>
-                                {% for niveau in niveaux %}}
+                            <select class="form-control h-50 p-1" type="text" name="recherche">
+                                {% for niveau in niveaux %}
                                     {% if niveauselection is defined and niveau.libelle == niveauselection %}
-                                        <option selected>{{ niveau.libelle }}</option>
+                                        <option value="{{ niveau.libelle }}" selected>{{ niveau.libelle }}</option>
                                     {% else %}
-                                    <option>{{ niveau.libelle }}</option>
+                                        <option value="{{ niveau.libelle }}">{{ niveau.libelle }}</option>
                                     {% endif %}
                                 {% endfor %}
                             </select>
                             <input type="hidden" name="_token" value="{{ csrf_token('filtre_niveau') }}">
-                            <button type="submit" class="btn btn-info btn-sm">filtrer</button>
+                            <button type="submit" class="ml-1 btn btn-info btn-sm">filtrer</button>
                         </div>
-                        
                     </form>
                 </th>
+                <th class="text-center align-top" scope="col">
+                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'DESC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true"><</a>
+                    <a href="{{ path('formations.sort', {champ:'publishedAt', ordre:'ASC'}) }}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">></a>
+                 </th>
                 <th class="text-center align-top" scope="col">
                     &nbsp;
                 </th>
@@ -56,12 +52,12 @@
                         </h5>
                     </td>
                     <td class="text-center">
-                        {{ formation.publishedatstring }}
-                    </td>
-                    <td class="text-center">
                         {% if formation.niveau %}
                             {{ formation.niveau.libelle }}
                         {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{ formation.publishedatstring }}
                     </td>
                     <td class="text-center">
                         {% if formation.miniature %}
