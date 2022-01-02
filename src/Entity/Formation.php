@@ -182,7 +182,7 @@ class Formation
         
             // vérifie que la miniature a la bonne taille
             elseif ($miniatureSize[0] !== 120 || $miniatureSize[1] !== 90) {
-                $context->buildViolation("La miniature doit être taille 120x90")
+                $context->buildViolation("La miniature doit être de taille 120x90")
                         ->atPath('miniature')
                         ->addViolation();
             }

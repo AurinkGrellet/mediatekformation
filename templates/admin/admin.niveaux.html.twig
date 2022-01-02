@@ -1,3 +1,63 @@
 {% extends "baseadmin.html.twig" %}
 
-{# UTILISER LE MÊME TEMPLATE QUE POUR LES FORMATIONS ? #}
+{% block title %}Gestion des niveaux{% endblock %}
+{% block body %}
+    
+    <div class="row justify-content-center">
+        <div class="col-8 ml-auto mr-5">
+            <table class="table table-responsive table-striped">
+                <col style="width:35%">
+                <col style="width:65%">
+                <thead>
+                    <tr>
+                        <th class="text-left align-top" scope="col">
+                            Niveau
+                        </th>
+                        <th class="text-left align-content-between" scope="col">
+                            Actions
+                            <form class="form-inline mt-1" method="POST" action="{{ path('admin.niveau.ajout') }}">
+                                <div class="form-group mr-1 mb-2">
+                                    <input type="text" class="sm" name="nouveau_niveau" size="15" maxlength="15">
+                                </div>
+                                <input type="hidden" name="_token" value="{{ csrf_token('ajout_niveau') }}">
+                                <button type="submit" class="btn btn-success btn-sm active pt-1 ml-1 mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                                    </svg>
+                                    Ajouter
+                                </button>
+                            </form>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for niveau in niveaux %}
+                        <tr>
+                            <td>
+                                <h5 class="text-info">
+                                    {{ niveau.libelle }}
+                                </h5>
+                            </td>
+                            <td class="text-center align-middle px-5" width="12%">
+                                <form method="POST" action="{{ path('admin.niveau.suppr', {id:niveau.id}) }}" class="px-2">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('suppr_niveau') }}">
+                                    {% if niveau.formations.count > 0 %}
+                                        <button onclick='alert("Le niveau {{ niveau.libelle }} a toujours {{ niveau.formations.count }} formation(s) associée(s) : il ne peut pas être supprimé."); return false;' type="button" class="btn btn-block btn-danger active px-1 pt-1 mt-2 mb-1">
+                                    {% else %}
+                                        <button onclick='return confirm("Veuillez confirmer la suppression du niveau suivant : {{ niveau.libelle }}")' type="submit" class="btn btn-block btn-danger active px-1 pt-1 mt-2 mb-1">
+                                    {% endif %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                        Supprimer
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -46,10 +46,4 @@ class FormationType extends AbstractType
             'data_class' => Formation::class,
         ]);
     }
-    
-    
-    public function val(ExecutionContextInterface $context, $payload) {
-        $context->buildViolation('Erreur')
-                ->addViolation();
-    }
 }
