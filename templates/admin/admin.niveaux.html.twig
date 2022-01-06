@@ -15,6 +15,9 @@
                         </th>
                         <th class="text-left align-content-between" scope="col">
                             Actions
+                            {% if erreur %}
+                                <h6 class='text-danger sm font-weight-light bg-light'>{{ erreur }}</h6>
+                            {% endif %}
                             <form class="form-inline mt-1" method="POST" action="{{ path('admin.niveau.ajout') }}">
                                 <div class="form-group mr-1 mb-2">
                                     <input type="text" class="sm" name="nouveau_niveau" size="15" maxlength="15">

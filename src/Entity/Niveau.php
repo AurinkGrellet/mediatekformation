@@ -22,6 +22,10 @@ class Niveau
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 15
+     * )
      */
     private $libelle;
 
