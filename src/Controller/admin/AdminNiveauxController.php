@@ -56,7 +56,8 @@ class AdminNiveauxController extends AbstractController {
     public function index(): Response{
         $niveaux = $this->repository->findAll();
         return $this->render(self::ADMINNIVEAUX, [
-            'niveaux' => $niveaux
+            'niveaux' => $niveaux,
+            'erreur' => null
         ]);
     }
     
@@ -84,12 +85,19 @@ class AdminNiveauxController extends AbstractController {
         if($this->isCsrfTokenValid('ajout_niveau', $request->get('_token'))){
             $niveau = new Niveau();
             $nom = $request->get('nouveau_niveau');
-            if (strlen($nom) > 15) {
-                $nom = substr($nom, 0, 15);
+            
+            if (strlen($nom) === 0 || strlen($nom) > 15) {
+                $niveaux = $this->repository->findAll();
+                return $this->render(self::ADMINNIVEAUX, [
+                    'niveaux' => $niveaux,
+                    'erreur' => "Nom de niveau invalide"
+                ]);
             }
-            $niveau->setLibelle($nom);
-            $this->om->persist($niveau);
-            $this->om->flush();
+            else {
+                $niveau->setLibelle($nom);
+                $this->om->persist($niveau);
+                $this->om->flush();
+            }
         }
         return $this->redirectToRoute(self::ADMINNIVEAUXROUTE);
     }
